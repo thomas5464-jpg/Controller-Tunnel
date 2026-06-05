@@ -100,3 +100,10 @@ Enter the server IP, port, and optional PSK, then click **Start**.
 - Added server mode status and remote endpoint feedback in the UI.
 - Documented that DualShock/DualSense controllers require DS4Windows or another XInput wrapper to be detected.
 
+## v0.1.3 - Gyro HID Capture and Calibration 6/5/2026
+
+- Added Sony DualShock 4 / DualSense HID motion report capture for real gyro data instead of reusing joystick axes.
+- Forwarded optional gyro values with controller packets and displayed them in both client and server status.
+- Added slower, averaged gyro UI updates so values are readable while testing.
+- Added startup gyro calibration that asks the user to keep the controller still, subtracts stationary bias, converts raw counts to degrees/sec, and applies a small deadzone.
+- Updated the console client to reset gyro calibration on startup.
