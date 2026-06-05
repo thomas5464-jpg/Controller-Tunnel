@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "kgvwz/SCAZ4=",
+  "dgSpecHash": "MP6oe9YTW8M=",
   "success": true,
   "projectFilePath": "E:\\New folder (3)\\controller-tunnel\\client-ui\\ClientUI.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\kinid\\.nuget\\packages\\nefarius.vigem.client\\1.17.175\\nefarius.vigem.client.1.17.175.nupkg.sha512"
+    "C:\\Users\\kinid\\.nuget\\packages\\nefarius.vigem.client\\1.17.175\\nefarius.vigem.client.1.17.175.nupkg.sha512",
+    "C:\\Users\\kinid\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.22621.57\\microsoft.windows.sdk.net.ref.10.0.22621.57.nupkg.sha512"
   ],
   "logs": []
 }

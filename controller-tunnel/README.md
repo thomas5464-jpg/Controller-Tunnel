@@ -64,7 +64,7 @@ Use the built-in tabs to choose either the Client or Server mode. The Client tab
 
 - This MVP uses XInput for Xbox-style controllers.
 - DualShock/DualSense controllers require an XInput wrapper such as DS4Windows to be detected by the client.
-- Gyro and other advanced controller data are not included in this initial release.
+- The client can now detect and forward raw gyro axis data when a compatible controller exposes it.
 
 ## Disclaimer
 

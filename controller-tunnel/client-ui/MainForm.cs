@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Threading;
 using System.Windows.Forms;
+using ControllerTunnel;
 using Nefarius.ViGEm.Client;
 using Nefarius.ViGEm.Client.Targets;
 using Nefarius.ViGEm.Client.Targets.Xbox360;
@@ -23,6 +24,7 @@ namespace ClientUI
         Button btnClientStart;
         Button btnClientStop;
         Label lblClientStatus;
+        Label lblGyroStatus;
         Label lblControllerStatus;
         List<int> availableControllers = new List<int>();
 
@@ -132,11 +134,12 @@ namespace ClientUI
             btnClientStart = new Button() { Left = 90, Top = 145, Text = "Start", Width = 80 };
             btnClientStop = new Button() { Left = 180, Top = 145, Text = "Stop", Width = 80, Enabled = false };
             lblClientStatus = new Label() { Left = 10, Top = 190, Width = 480, Text = "Idle" };
+            lblGyroStatus = new Label() { Left = 10, Top = 220, Width = 750, Height = 80, Text = "Gyro: none", AutoSize = false };
 
             btnClientStart.Click += BtnClientStart_Click;
             btnClientStop.Click += BtnClientStop_Click;
 
-            clientTab.Controls.AddRange(new Control[] { lblController, cmbControllerIndex, lblControllerStatus, lbl1, txtServer, lbl2, txtPort, lbl3, txtPsk, btnClientStart, btnClientStop, lblClientStatus });
+            clientTab.Controls.AddRange(new Control[] { lblController, cmbControllerIndex, lblControllerStatus, lbl1, txtServer, lbl2, txtPort, lbl3, txtPsk, btnClientStart, btnClientStop, lblClientStatus, lblGyroStatus });
 
             var lblSrv1 = new Label() { Left = 10, Top = 10, Text = "Listen Port:" };
             txtListenPort = new TextBox() { Left = 110, Top = 8, Width = 100, Text = "5555" };
@@ -323,7 +326,13 @@ namespace ClientUI
             }
             catch { }
 
+            ControllerTransport.ResetGyroCalibration();
             uint seq = 0;
+            DateTime nextGyroDisplayUpdate = DateTime.UtcNow;
+            int gyroDisplayCount = 0;
+            float gyroDisplayX = 0f;
+            float gyroDisplayY = 0f;
+            float gyroDisplayZ = 0f;
 
             while (!token.IsCancellationRequested)
             {
@@ -347,6 +356,14 @@ namespace ClientUI
                 bw.Write(state.Gamepad.sThumbLY);
                 bw.Write(state.Gamepad.sThumbRX);
                 bw.Write(state.Gamepad.sThumbRY);
+
+                var gyro = ControllerTransport.ReadGyroSample();
+                if (gyro.HasGyro)
+                {
+                    bw.Write(gyro.X);
+                    bw.Write(gyro.Y);
+                    bw.Write(gyro.Z);
+                }
 
                 var plaintext = ms.ToArray();
 
@@ -378,7 +395,43 @@ namespace ClientUI
                     udp.Send(outMs.ToArray(), (int)outMs.Length, endpoint);
                 }
 
-                BeginInvoke(new Action(() => lblClientStatus.Text = $"Sent seq {seq - 1} at {DateTime.Now:T}"));
+                var statusText = $"Sent seq {seq - 1} at {DateTime.Now:T}";
+                if (gyro.HasGyro)
+                {
+                    gyroDisplayX += gyro.X;
+                    gyroDisplayY += gyro.Y;
+                    gyroDisplayZ += gyro.Z;
+                    gyroDisplayCount++;
+
+                    if (DateTime.UtcNow >= nextGyroDisplayUpdate)
+                    {
+                        float avgX = gyroDisplayX / gyroDisplayCount;
+                        float avgY = gyroDisplayY / gyroDisplayCount;
+                        float avgZ = gyroDisplayZ / gyroDisplayCount;
+
+                        var gyroText =
+                            $"Gyro deg/sec avg: {avgX:F2}, {avgY:F2}, {avgZ:F2}\r\n" +
+                            ControllerTransport.GetGyroStatus();
+
+                        BeginInvoke(new Action(() => {
+                            lblClientStatus.Text = statusText;
+                            lblGyroStatus.Text = gyroText;
+                        }));
+
+                        gyroDisplayX = 0f;
+                        gyroDisplayY = 0f;
+                        gyroDisplayZ = 0f;
+                        gyroDisplayCount = 0;
+                        nextGyroDisplayUpdate = DateTime.UtcNow.AddMilliseconds(250);
+                    }
+                }
+                else
+                {
+                    BeginInvoke(new Action(() => {
+                        lblClientStatus.Text = statusText;
+                        lblGyroStatus.Text = ControllerTransport.GetGyroStatus();
+                    }));
+                }
                 Thread.Sleep(8);
             }
 
@@ -403,6 +456,11 @@ namespace ClientUI
             BeginInvoke(new Action(() => lblServerStatus.Text = "Server running, virtual controller connected."));
 
             int packetCount = 0;
+            DateTime nextServerStatusUpdate = DateTime.UtcNow;
+            int serverGyroDisplayCount = 0;
+            float serverGyroDisplayX = 0f;
+            float serverGyroDisplayY = 0f;
+            float serverGyroDisplayZ = 0f;
             var remoteEndPoint = new IPEndPoint(IPAddress.Any, 0);
 
             while (!token.IsCancellationRequested)
@@ -475,6 +533,17 @@ namespace ClientUI
                 short thumbRX = br.ReadInt16();
                 short thumbRY = br.ReadInt16();
 
+                float gyroX = 0f;
+                float gyroY = 0f;
+                float gyroZ = 0f;
+                bool hasGyro = ms.Length - ms.Position >= 12;
+                if (hasGyro)
+                {
+                    gyroX = br.ReadSingle();
+                    gyroY = br.ReadSingle();
+                    gyroZ = br.ReadSingle();
+                }
+
                 controller.SetButtonState(Xbox360Button.A, (wButtons & 0x1000) != 0);
                 controller.SetButtonState(Xbox360Button.B, (wButtons & 0x2000) != 0);
                 controller.SetButtonState(Xbox360Button.X, (wButtons & 0x4000) != 0);
@@ -498,11 +567,40 @@ namespace ClientUI
                 controller.SetAxisValue(Xbox360Axis.RightThumbY, thumbRY);
 
                 packetCount++;
-                BeginInvoke(new Action(() =>
+                if (hasGyro)
                 {
-                    lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}.";
-                    lblServerRemote.Text = $"Remote: {remoteEndPoint.Address}:{remoteEndPoint.Port}";
-                }));
+                    serverGyroDisplayX += gyroX;
+                    serverGyroDisplayY += gyroY;
+                    serverGyroDisplayZ += gyroZ;
+                    serverGyroDisplayCount++;
+
+                    if (DateTime.UtcNow >= nextServerStatusUpdate)
+                    {
+                        float avgX = serverGyroDisplayX / serverGyroDisplayCount;
+                        float avgY = serverGyroDisplayY / serverGyroDisplayCount;
+                        float avgZ = serverGyroDisplayZ / serverGyroDisplayCount;
+
+                        BeginInvoke(new Action(() =>
+                        {
+                            lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}. Gyro deg/sec avg: {avgX:F2}, {avgY:F2}, {avgZ:F2}";
+                            lblServerRemote.Text = $"Remote: {remoteEndPoint.Address}:{remoteEndPoint.Port}";
+                        }));
+
+                        serverGyroDisplayX = 0f;
+                        serverGyroDisplayY = 0f;
+                        serverGyroDisplayZ = 0f;
+                        serverGyroDisplayCount = 0;
+                        nextServerStatusUpdate = DateTime.UtcNow.AddMilliseconds(250);
+                    }
+                }
+                else
+                {
+                    BeginInvoke(new Action(() =>
+                    {
+                        lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}.";
+                        lblServerRemote.Text = $"Remote: {remoteEndPoint.Address}:{remoteEndPoint.Port}";
+                    }));
+                }
             }
 
             token.ThrowIfCancellationRequested();

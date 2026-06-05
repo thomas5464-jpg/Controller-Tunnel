@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Threading;
 using System.Security.Cryptography;
+using ControllerTunnel;
 
 [StructLayout(LayoutKind.Sequential)]
 struct XINPUT_GAMEPAD
@@ -69,6 +70,8 @@ class Program
         uint seq = 0;
 
         Console.WriteLine("Client started. Polling XInput and sending to {0}:{1}", serverIp, port);
+        Console.WriteLine("Keep the controller still for 2 seconds while gyro calibration runs.");
+        ControllerTransport.ResetGyroCalibration();
 
         while (true)
         {
@@ -89,6 +92,14 @@ class Program
                 bw.Write(state.Gamepad.sThumbLY);
                 bw.Write(state.Gamepad.sThumbRX);
                 bw.Write(state.Gamepad.sThumbRY);
+
+                var gyro = ControllerTransport.ReadGyroSample();
+                if (gyro.HasGyro)
+                {
+                    bw.Write(gyro.X);
+                    bw.Write(gyro.Y);
+                    bw.Write(gyro.Z);
+                }
 
                 var plaintext = ms.ToArray();
 

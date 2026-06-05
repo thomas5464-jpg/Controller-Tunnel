@@ -117,6 +117,17 @@ class Program
                 short thumbRX = br.ReadInt16();
                 short thumbRY = br.ReadInt16();
 
+                float gyroX = 0f;
+                float gyroY = 0f;
+                float gyroZ = 0f;
+                bool hasGyro = ms.Length - ms.Position >= 12;
+                if (hasGyro)
+                {
+                    gyroX = br.ReadSingle();
+                    gyroY = br.ReadSingle();
+                    gyroZ = br.ReadSingle();
+                }
+
                 // Map buttons
                 controller.SetButtonState(Xbox360Button.A, (wButtons & 0x1000) != 0);
                 controller.SetButtonState(Xbox360Button.B, (wButtons & 0x2000) != 0);
@@ -143,6 +154,10 @@ class Program
                 controller.SetAxisValue(Xbox360Axis.RightThumbX, thumbRX);
                 controller.SetAxisValue(Xbox360Axis.RightThumbY, thumbRY);
 
+                if (hasGyro)
+                {
+                    Console.WriteLine($"Gyro data received: X={gyroX:F3}, Y={gyroY:F3}, Z={gyroZ:F3}");
+                }
             }
             catch (Exception ex)
             {

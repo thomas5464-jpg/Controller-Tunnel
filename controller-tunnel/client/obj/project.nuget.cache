@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "+2j5dbhdvaQ=",
+  "dgSpecHash": "Gb0yXZfp6sU=",
   "success": true,
   "projectFilePath": "E:\\New folder (3)\\controller-tunnel\\client\\Client.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\kinid\\.nuget\\packages\\microsoft.windows.sdk.net.ref\\10.0.22621.57\\microsoft.windows.sdk.net.ref.10.0.22621.57.nupkg.sha512"
+  ],
   "logs": []
 }

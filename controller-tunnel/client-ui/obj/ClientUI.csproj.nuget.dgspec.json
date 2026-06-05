@@ -17,15 +17,15 @@
           "C:\\Users\\kinid\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net10.0-windows"
+          "net10.0-windows10.0.22621.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net10.0-windows": {
-            "framework": "net10.0-windows7.0",
-            "targetAlias": "net10.0-windows",
+          "net10.0-windows10.0.22621.0": {
+            "framework": "net10.0-windows10.0.22621",
+            "targetAlias": "net10.0-windows10.0.22621.0",
             "projectReferences": {
               "E:\\New folder (3)\\controller-tunnel\\client\\Client.csproj": {
                 "projectPath": "E:\\New folder (3)\\controller-tunnel\\client\\Client.csproj"
@@ -46,9 +46,9 @@
         "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
-        "net10.0-windows": {
-          "framework": "net10.0-windows7.0",
-          "targetAlias": "net10.0-windows",
+        "net10.0-windows10.0.22621.0": {
+          "framework": "net10.0-windows10.0.22621",
+          "targetAlias": "net10.0-windows10.0.22621.0",
           "dependencies": {
             "Nefarius.ViGEm.Client": {
               "target": "Package",
@@ -66,8 +66,17 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.Windows.SDK.NET.Ref",
+              "version": "[10.0.22621.57, 10.0.22621.57]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.Windows.SDK.NET.Ref.Windows": {
               "privateAssets": "all"
             },
             "Microsoft.WindowsDesktop.App.WindowsForms": {
@@ -381,15 +390,15 @@
           "C:\\Users\\kinid\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
-          "net10.0"
+          "net10.0-windows10.0.22621.0"
         ],
         "sources": {
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net10.0": {
-            "framework": "net10.0",
-            "targetAlias": "net10.0",
+          "net10.0-windows10.0.22621.0": {
+            "framework": "net10.0-windows10.0.22621",
+            "targetAlias": "net10.0-windows10.0.22621.0",
             "projectReferences": {}
           }
         },
@@ -406,9 +415,9 @@
         "SdkAnalysisLevel": "10.0.300"
       },
       "frameworks": {
-        "net10.0": {
-          "framework": "net10.0",
-          "targetAlias": "net10.0",
+        "net10.0-windows10.0.22621.0": {
+          "framework": "net10.0-windows10.0.22621",
+          "targetAlias": "net10.0-windows10.0.22621.0",
           "imports": [
             "net461",
             "net462",
@@ -420,8 +429,17 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.Windows.SDK.NET.Ref",
+              "version": "[10.0.22621.57, 10.0.22621.57]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            },
+            "Microsoft.Windows.SDK.NET.Ref.Windows": {
               "privateAssets": "all"
             }
           },
