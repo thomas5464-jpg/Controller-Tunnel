@@ -1,26 +1,47 @@
-Controller Tunnel (Windows -> Windows)
+# Controller Tunnel (Windows -> Windows)
 
-MVP that forwards controller input from a Windows client to a Windows server using UDP.
+Controller Tunnel is a Windows-only MVP that forwards controller input from a Windows client to a Windows server over UDP.
 
-Prerequisites
-- .NET SDK (6 or later)
+## About
+
+Controller Tunnel was created to enable remote controller input forwarding between Windows machines when direct controller sharing is not possible. It focuses on a low-latency, easy-to-deploy Windows-only path for controller input, even though it does not currently support gyro or advanced sensor transport.
+
+## Why This Exists
+
+This project addresses scenarios where a controller is connected to one PC but input is needed on another PC, such as remote gaming setups, testing, or development workflows. It provides a lightweight UDP-based transport with an optional encrypted mode for added privacy, offering a simpler alternative to more complex long-distance sharing services that may be harder to set up.
+
+## Update Log
+
+See the latest release notes and history in [UPDATE_LOG.md](UPDATE_LOG.md).
+
+## Prerequisites
+
+- .NET SDK 6.0 or later
 - On the server machine: install ViGEmBus driver and the ViGEm client library (https://vigem.org/)
 
-Quick run
-- Build both projects: `dotnet build` in each folder
-- Start server (needs ViGEmBus installed and usually admin privileges):
+## Build & Run
+
+1. Build both projects:
+
+```powershell
+dotnet build
+```
+
+2. Start the server (usually requires admin privileges):
 
 ```powershell
 dotnet run --project server
 ```
 
--- Start client, pointing to the server IP and port (default 5555):
+3. Start the console client, pointing to the server IP and port (default 5555):
 
 ```powershell
 dotnet run --project client -- 192.0.2.5 5555
 ```
 
-- To enable per-packet encryption with a pre-shared passphrase (PSK):
+## Optional Encryption
+
+To enable per-packet encryption with a pre-shared passphrase (PSK):
 
 ```powershell
 dotnet run --project server -- 5555 "my-secret-passphrase"
@@ -29,14 +50,30 @@ dotnet run --project client -- 192.0.2.5 5555 "my-secret-passphrase"
 
 The PSK is hashed with SHA-256 to derive an AES-256-GCM key.
 
-- To use the simple GUI client (Windows):
+## GUI Client
+
+To use the Windows GUI client:
 
 ```powershell
 dotnet run --project client-ui
 ```
 
-Enter the server IP/port and optional PSK, then click Start.
+Enter the server IP, port, and optional PSK, then click **Start**.
 
-Notes
-- This MVP uses XInput on the client (Xbox-style controllers). Gyro data is not included in this first pass.
-- Later: add STUN/UPnP, encryption (AES-GCM), and a relay option.
+## Notes
+
+- This MVP uses XInput for Xbox-style controllers.
+- Gyro and other advanced controller data are not included in this initial release.
+
+## Disclaimer
+
+- This project is an early MVP and may not be fully stable in all network or controller environments.
+- Use at your own risk; administrative privileges and the ViGEmBus driver are required on the server.
+- Do not expose the service to untrusted networks without proper security controls.
+
+## Roadmap
+
+- Add STUN/UPnP support for NAT traversal
+- Add relay mode for multi-hop or internet-based forwarding
+- Support additional controller APIs beyond XInput
+- Add sensor and gyro transport support
