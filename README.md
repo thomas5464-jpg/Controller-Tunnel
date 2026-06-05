@@ -4,7 +4,6 @@ Controller Tunnel is a Windows-only MVP that forwards controller input from a Wi
 
 ## About
 
-hopefully i dont forget about this project.
 Controller Tunnel was created to enable remote controller input forwarding between Windows machines when direct controller sharing is not possible. It focuses on a low-latency, easy-to-deploy Windows-only path for controller input, even though it does not currently support gyro or advanced sensor transport.
 
 ## Why This Exists
