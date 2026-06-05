@@ -2,9 +2,6 @@
 
 Controller Tunnel is a Windows-only MVP that forwards controller input from a Windows client to a Windows server over UDP.
 
-## Update Log
-
-See the latest release notes and history in [UPDATE_LOG.md](UPDATE_LOG.md).
 
 ## Prerequisites
 
