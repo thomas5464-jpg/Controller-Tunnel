@@ -93,3 +93,11 @@ Enter the server IP, port, and optional PSK, then click **Start**.
   - Relay mode for multi-hop or internet-based forwarding.
   - Support for additional controller APIs beyond XInput.
   - Sensor and gyro data transport.
+
+ ## v0.1.2 - Combined UI and Controller Detection
+
+- Added a combined client/server Windows UI in `client-ui`.
+- Added XInput controller detection and selection in the client UI.
+- Added server mode status and remote endpoint feedback in the UI.
+- Documented that DualShock/DualSense controllers require DS4Windows or another XInput wrapper to be detected.
+
