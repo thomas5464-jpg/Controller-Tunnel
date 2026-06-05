@@ -1,0 +1,6 @@
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.csproj.AssemblyReference.cache
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.GeneratedMSBuildEditorConfig.editorconfig
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.AssemblyInfoInputs.cache
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.AssemblyInfo.cs
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.csproj.CoreCompileInputs.cache
+E:\New folder (3)\controller-tunnel\server\obj\Debug\net6.0\Server.sourcelink.json

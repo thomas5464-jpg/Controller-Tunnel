@@ -1,0 +1,15 @@
+E:\New folder (3)\controller-tunnel\client\bin\Debug\net10.0\Client.exe
+E:\New folder (3)\controller-tunnel\client\bin\Debug\net10.0\Client.deps.json
+E:\New folder (3)\controller-tunnel\client\bin\Debug\net10.0\Client.runtimeconfig.json
+E:\New folder (3)\controller-tunnel\client\bin\Debug\net10.0\Client.dll
+E:\New folder (3)\controller-tunnel\client\bin\Debug\net10.0\Client.pdb
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.GeneratedMSBuildEditorConfig.editorconfig
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.AssemblyInfoInputs.cache
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.AssemblyInfo.cs
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.csproj.CoreCompileInputs.cache
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.sourcelink.json
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.dll
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\refint\Client.dll
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.pdb
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\Client.genruntimeconfig.cache
+E:\New folder (3)\controller-tunnel\client\obj\Debug\net10.0\ref\Client.dll

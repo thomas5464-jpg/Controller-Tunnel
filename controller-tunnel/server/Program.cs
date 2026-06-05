@@ -43,7 +43,7 @@ class Program
         using var udp = new UdpClient(port);
         using var client = new ViGEmClient();
 
-        var controller = new Xbox360Controller(client);
+        var controller = client.CreateXbox360Controller();
         controller.Connect();
 
         Console.WriteLine("ViGEm virtual Xbox 360 controller connected.");
@@ -86,7 +86,7 @@ class Program
                     byte[] plaintext = new byte[cipherLen];
                     try
                     {
-                        using var aes = new System.Security.Cryptography.AesGcm(key);
+                        using var aes = new System.Security.Cryptography.AesGcm(key, 16);
                         aes.Decrypt(nonce, ciphertext, tag, plaintext);
                     }
                     catch (Exception ex)

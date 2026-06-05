@@ -101,7 +101,7 @@ class Program
 
                     byte[] ciphertext = new byte[plaintext.Length];
                     byte[] tag = new byte[16];
-                    using var aes = new System.Security.Cryptography.AesGcm(key);
+                    using var aes = new System.Security.Cryptography.AesGcm(key, 16);
                     aes.Encrypt(nonce, plaintext, ciphertext, tag);
 
                     using var outMs = new MemoryStream();
