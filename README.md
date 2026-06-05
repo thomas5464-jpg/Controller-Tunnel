@@ -4,12 +4,11 @@ Controller Tunnel is a Windows-only MVP that forwards controller input from a Wi
 
 ## About
 
-Controller Tunnel was created to enable remote controller input forwarding between Windows machines when direct controller sharing is not possible.
+Controller Tunnel was created to enable remote controller input forwarding between Windows machines when direct controller sharing is not possible. It focuses on a low-latency, easy-to-deploy Windows-only path for controller input, even though it does not currently support gyro or advanced sensor transport.
 
 ## Why This Exists
 
-This project addresses scenarios where a controller is connected to one PC but input is needed on another PC, such as remote gaming setups, testing, or development workflows. It provides a lightweight UDP-based transport with an optional encrypted mode for added privacy.
-
+This project addresses scenarios where a controller is connected to one PC but input is needed on another PC, such as remote gaming setups, testing, or development workflows. It provides a lightweight UDP-based transport with an optional encrypted mode for added privacy, offering a simpler alternative to more complex long-distance sharing services that may be harder to set up.
 ## Prerequisites
 
 - .NET SDK 6.0 or later
