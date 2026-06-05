@@ -61,6 +61,11 @@ Enter the server IP, port, and optional PSK, then click **Start**.
 - Support additional controller APIs beyond XInput
 - Add sensor and gyro transport support
 
+## Disclaimer
+
+- This project is an early MVP and may not be fully stable in all network or controller environments.
+- Use at your own risk; administrative privileges and the ViGEmBus driver are required on the server.
+- Do not expose the service to untrusted networks without proper security controls.
 
 
 # Update Log
