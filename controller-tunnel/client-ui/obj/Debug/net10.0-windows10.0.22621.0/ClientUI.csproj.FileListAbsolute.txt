@@ -36,3 +36,11 @@ E:\New folder (3)\controller-tunnel\client-ui\bin\Verify\Microsoft.Windows.SDK.N
 E:\New folder (3)\controller-tunnel\client-ui\bin\Verify\WinRT.Runtime.dll
 E:\New folder (3)\controller-tunnel\client-ui\bin\Verify\Client.dll
 E:\New folder (3)\controller-tunnel\client-ui\bin\Verify\Client.pdb
+E:\New folder (3)\tmp\client-ui-build\Client.deps.json
+E:\New folder (3)\tmp\client-ui-build\Client.runtimeconfig.json
+E:\New folder (3)\tmp\client-ui-build\Client.exe
+E:\New folder (3)\tmp\client-ui-build\ClientUI.exe
+E:\New folder (3)\tmp\client-ui-build\ClientUI.deps.json
+E:\New folder (3)\tmp\client-ui-build\ClientUI.runtimeconfig.json
+E:\New folder (3)\tmp\client-ui-build\ClientUI.dll
+E:\New folder (3)\tmp\client-ui-build\ClientUI.pdb

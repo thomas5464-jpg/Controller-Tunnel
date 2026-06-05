@@ -29,17 +29,54 @@ struct XINPUT_STATE
 class Program
 {
     [DllImport("xinput1_4.dll", EntryPoint = "XInputGetState")]
-    static extern int XInputGetState(uint dwUserIndex, out XINPUT_STATE pState);
+    static extern int XInputGetState_1_4(uint dwUserIndex, out XINPUT_STATE pState);
+
+    [DllImport("xinput1_3.dll", EntryPoint = "XInputGetState")]
+    static extern int XInputGetState_1_3(uint dwUserIndex, out XINPUT_STATE pState);
+
+    [DllImport("xinput9_1_0.dll", EntryPoint = "XInputGetState")]
+    static extern int XInputGetState_9_1_0(uint dwUserIndex, out XINPUT_STATE pState);
+
+    static int XInputGetState(uint dwUserIndex, out XINPUT_STATE pState)
+    {
+        pState = default;
+
+        try
+        {
+            return XInputGetState_1_4(dwUserIndex, out pState);
+        }
+        catch (DllNotFoundException)
+        {
+        }
+
+        try
+        {
+            return XInputGetState_1_3(dwUserIndex, out pState);
+        }
+        catch (DllNotFoundException)
+        {
+        }
+
+        try
+        {
+            return XInputGetState_9_1_0(dwUserIndex, out pState);
+        }
+        catch (DllNotFoundException)
+        {
+        }
+
+        return -1;
+    }
 
     static void Main(string[] args)
     {
         if (args.Length < 2)
         {
-            Console.WriteLine("Usage: client <server-ip> <port> [psk]");
+            Console.WriteLine("Usage: client <server-host-or-ip> <port> [psk]");
             return;
         }
 
-        var serverIp = args[0];
+        var serverHost = args[0];
         var port = int.Parse(args[1]);
         string? psk = args.Length >= 3 ? args[2] : null;
         byte[]? key = null;
@@ -50,7 +87,8 @@ class Program
             Console.WriteLine("Using PSK-derived AES-GCM key.");
         }
 
-        var endpoint = new IPEndPoint(IPAddress.Parse(serverIp), port);
+        var endpoint = ResolveEndpoint(serverHost, port);
+        Console.WriteLine("Resolved server {0}:{1} to {2}", serverHost, port, endpoint);
 
         // Discover public mapping via STUN (best-effort)
         try
@@ -68,8 +106,10 @@ class Program
         using var udp = new UdpClient();
 
         uint seq = 0;
+        DateTime nextStatusLog = DateTime.UtcNow;
+        int lastControllerResult = int.MinValue;
 
-        Console.WriteLine("Client started. Polling XInput and sending to {0}:{1}", serverIp, port);
+        Console.WriteLine("Client started. Polling XInput and sending to {0}", endpoint);
         Console.WriteLine("Keep the controller still for 2 seconds while gyro calibration runs.");
         ControllerTransport.ResetGyroCalibration();
 
@@ -80,6 +120,8 @@ class Program
 
             if (res == 0) // ERROR_SUCCESS
             {
+                lastControllerResult = 0;
+
                 using var ms = new MemoryStream();
                 using var bw = new BinaryWriter(ms);
 
@@ -135,10 +177,55 @@ class Program
                     var data = outMs.ToArray();
                     udp.Send(data, data.Length, endpoint);
                 }
+
+                if (DateTime.UtcNow >= nextStatusLog)
+                {
+                    Console.WriteLine(
+                        "Sent seq {0} to {1}. Buttons=0x{2:X4} LT={3} RT={4} LX={5} LY={6} RX={7} RY={8}{9}",
+                        seq - 1,
+                        endpoint,
+                        state.Gamepad.wButtons,
+                        state.Gamepad.bLeftTrigger,
+                        state.Gamepad.bRightTrigger,
+                        state.Gamepad.sThumbLX,
+                        state.Gamepad.sThumbLY,
+                        state.Gamepad.sThumbRX,
+                        state.Gamepad.sThumbRY,
+                        gyro.HasGyro ? $" Gyro={gyro.X:F2},{gyro.Y:F2},{gyro.Z:F2}" : string.Empty);
+                    nextStatusLog = DateTime.UtcNow.AddSeconds(1);
+                }
+            }
+            else if (res != lastControllerResult || DateTime.UtcNow >= nextStatusLog)
+            {
+                Console.WriteLine("Controller 0 is not available through XInput. XInputGetState returned {0}.", res);
+                Console.WriteLine("For DualShock/DualSense, enable an XInput wrapper such as DS4Windows or choose the controller in the GUI client.");
+                lastControllerResult = res;
+                nextStatusLog = DateTime.UtcNow.AddSeconds(2);
             }
 
             Thread.Sleep(8); // ~125Hz
         }
+    }
+
+    static IPEndPoint ResolveEndpoint(string host, int port)
+    {
+        if (IPAddress.TryParse(host, out IPAddress? parsed))
+            return new IPEndPoint(parsed, port);
+
+        IPAddress[] addresses = Dns.GetHostAddresses(host);
+        foreach (var address in addresses)
+        {
+            if (address.AddressFamily == AddressFamily.InterNetwork)
+                return new IPEndPoint(address, port);
+        }
+
+        foreach (var address in addresses)
+        {
+            if (address.AddressFamily == AddressFamily.InterNetworkV6)
+                return new IPEndPoint(address, port);
+        }
+
+        throw new InvalidOperationException($"Could not resolve server host '{host}'.");
     }
 
     static IPEndPoint? DiscoverPublicEndpoint(string stunHost = "stun.l.google.com", int stunPort = 19302, int timeoutMs = 2000)

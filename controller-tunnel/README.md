@@ -33,11 +33,29 @@ dotnet build
 dotnet run --project server
 ```
 
-3. Start the console client, pointing to the server IP and port (default 5555):
+3. Start the console client, pointing to the server host/IP and port (default 5555):
 
 ```powershell
 dotnet run --project client -- 192.0.2.5 5555
 ```
+
+The client accepts a public IP, LAN IP, or DNS name:
+
+```powershell
+dotnet run --project client -- my-controller-server.example.com 5555
+```
+
+## Internet Setup
+
+Direct internet play uses UDP. For the client to reach the server from outside your local network:
+
+- Run the server with listen IP `0.0.0.0` and port `5555`, or another port you choose.
+- Allow inbound UDP on that port in Windows Firewall on the server PC.
+- If the server is behind a home router, forward that UDP port from the router to the server PC's LAN IP.
+- In the client, enter the server's public IP address or dynamic DNS hostname.
+- If you use a PSK, the same PSK must be set on both the client and server.
+
+Without a reachable public IP/port-forward or a relay server, UDP packets cannot cross most NAT routers reliably.
 
 ## Optional Encryption
 
@@ -45,7 +63,7 @@ To enable per-packet encryption with a pre-shared passphrase (PSK):
 
 ```powershell
 dotnet run --project server -- 5555 "my-secret-passphrase"
-dotnet run --project client -- 192.0.2.5 5555 "my-secret-passphrase"
+dotnet run --project client -- my-controller-server.example.com 5555 "my-secret-passphrase"
 ```
 
 The PSK is hashed with SHA-256 to derive an AES-256-GCM key.

@@ -23,3 +23,8 @@ E:\New folder (3)\controller-tunnel\client\bin\Verify\Client.dll
 E:\New folder (3)\controller-tunnel\client\bin\Verify\Client.pdb
 E:\New folder (3)\controller-tunnel\client\bin\Verify\Microsoft.Windows.SDK.NET.dll
 E:\New folder (3)\controller-tunnel\client\bin\Verify\WinRT.Runtime.dll
+E:\New folder (3)\tmp\client-ui-build\Client.exe
+E:\New folder (3)\tmp\client-ui-build\Client.deps.json
+E:\New folder (3)\tmp\client-ui-build\Client.runtimeconfig.json
+E:\New folder (3)\tmp\client-ui-build\Client.dll
+E:\New folder (3)\tmp\client-ui-build\Client.pdb

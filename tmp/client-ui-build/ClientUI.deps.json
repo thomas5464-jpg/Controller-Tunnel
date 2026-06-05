@@ -1,0 +1,73 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ClientUI/1.0.0": {
+        "dependencies": {
+          "Client": "1.0.0",
+          "Nefarius.ViGEm.Client": "1.17.175",
+          "runtimepack.Microsoft.Windows.SDK.NET.Ref": "10.0.22621.57"
+        },
+        "runtime": {
+          "ClientUI.dll": {}
+        }
+      },
+      "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22621.57": {
+        "runtime": {
+          "Microsoft.Windows.SDK.NET.dll": {
+            "assemblyVersion": "10.0.22621.38",
+            "fileVersion": "10.0.22621.55"
+          },
+          "WinRT.Runtime.dll": {
+            "assemblyVersion": "2.2.0.0",
+            "fileVersion": "2.2.0.48161"
+          }
+        }
+      },
+      "Nefarius.ViGEm.Client/1.17.175": {
+        "runtime": {
+          "lib/netcoreapp2.2/Nefarius.ViGEm.Client.dll": {
+            "assemblyVersion": "1.17.175.0",
+            "fileVersion": "1.17.175.0"
+          }
+        }
+      },
+      "Client/1.0.0": {
+        "runtime": {
+          "Client.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ClientUI/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "runtimepack.Microsoft.Windows.SDK.NET.Ref/10.0.22621.57": {
+      "type": "runtimepack",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Nefarius.ViGEm.Client/1.17.175": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IOEK/kTus3JGmKindbTJuhmQ25TFyXbgwazEWlTDTrZ75ZKrcqhk2R7bykXxk6kfqHnaqsTNLEBv8wqLO+0AfQ==",
+      "path": "nefarius.vigem.client/1.17.175",
+      "hashPath": "nefarius.vigem.client.1.17.175.nupkg.sha512"
+    },
+    "Client/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

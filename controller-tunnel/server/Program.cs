@@ -49,6 +49,8 @@ class Program
         Console.WriteLine("ViGEm virtual Xbox 360 controller connected.");
 
         IPEndPoint? remote = null;
+        int packetCount = 0;
+        DateTime nextStatusLog = DateTime.UtcNow;
 
         while (true)
         {
@@ -157,6 +159,25 @@ class Program
                 if (hasGyro)
                 {
                     Console.WriteLine($"Gyro data received: X={gyroX:F3}, Y={gyroY:F3}, Z={gyroZ:F3}");
+                }
+
+                packetCount++;
+                if (DateTime.UtcNow >= nextStatusLog)
+                {
+                    Console.WriteLine(
+                        "Received {0} packets. Last seq={1} from {2}. Buttons=0x{3:X4} LT={4} RT={5} LX={6} LY={7} RX={8} RY={9}{10}",
+                        packetCount,
+                        seq,
+                        remote,
+                        wButtons,
+                        leftTrigger,
+                        rightTrigger,
+                        thumbLX,
+                        thumbLY,
+                        thumbRX,
+                        thumbRY,
+                        hasGyro ? $" Gyro={gyroX:F2},{gyroY:F2},{gyroZ:F2}" : string.Empty);
+                    nextStatusLog = DateTime.UtcNow.AddSeconds(1);
                 }
             }
             catch (Exception ex)

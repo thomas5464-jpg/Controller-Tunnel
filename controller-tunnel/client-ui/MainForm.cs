@@ -124,7 +124,7 @@ namespace ClientUI
 
             lblControllerStatus = new Label() { Left = 400, Top = 10, Width = 360, Text = "Detecting controllers..." };
 
-            var lbl1 = new Label() { Left = 10, Top = 50, Text = "Server IP:" };
+            var lbl1 = new Label() { Left = 10, Top = 50, Text = "Server host/IP:" };
             txtServer = new TextBox() { Left = 120, Top = 48, Width = 530, Text = "127.0.0.1" };
 
             var lbl2 = new Label() { Left = 10, Top = 80, Text = "Port:" };
@@ -214,9 +214,13 @@ namespace ClientUI
         private void BtnClientStart_Click(object? sender, EventArgs e)
         {
             if (ctsClient != null) return;
-            if (!IPAddress.TryParse(txtServer.Text, out _))
+            try
             {
-                MessageBox.Show("Invalid server IP");
+                ResolveEndpoint(txtServer.Text, port: 0);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Invalid server host/IP: " + ex.Message);
                 return;
             }
 
@@ -320,7 +324,7 @@ namespace ClientUI
         {
             BeginInvoke(new Action(() => lblClientStatus.Text = "Running"));
 
-            var endpoint = new IPEndPoint(IPAddress.Parse(serverIp), port);
+            var endpoint = ResolveEndpoint(serverIp, port);
             using var udp = new UdpClient();
 
             byte[]? key = null;
@@ -448,6 +452,27 @@ namespace ClientUI
             }
 
             token.ThrowIfCancellationRequested();
+        }
+
+        private static IPEndPoint ResolveEndpoint(string host, int port)
+        {
+            if (IPAddress.TryParse(host, out IPAddress? parsed))
+                return new IPEndPoint(parsed, port);
+
+            IPAddress[] addresses = Dns.GetHostAddresses(host);
+            foreach (var address in addresses)
+            {
+                if (address.AddressFamily == AddressFamily.InterNetwork)
+                    return new IPEndPoint(address, port);
+            }
+
+            foreach (var address in addresses)
+            {
+                if (address.AddressFamily == AddressFamily.InterNetworkV6)
+                    return new IPEndPoint(address, port);
+            }
+
+            throw new InvalidOperationException($"Could not resolve server host '{host}'.");
         }
 
         private void RunServerLoop(IPAddress listenIp, int port, string? psk, CancellationToken token)
