@@ -49,6 +49,12 @@
         "net10.0-windows": {
           "framework": "net10.0-windows7.0",
           "targetAlias": "net10.0-windows",
+          "dependencies": {
+            "Nefarius.ViGEm.Client": {
+              "target": "Package",
+              "version": "[1.17.175, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

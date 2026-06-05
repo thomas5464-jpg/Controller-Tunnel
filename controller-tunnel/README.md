@@ -52,17 +52,18 @@ The PSK is hashed with SHA-256 to derive an AES-256-GCM key.
 
 ## GUI Client
 
-To use the Windows GUI client:
+To use the Windows GUI client with combined client/server support:
 
 ```powershell
 dotnet run --project client-ui
 ```
 
-Enter the server IP, port, and optional PSK, then click **Start**.
+Use the built-in tabs to choose either the Client or Server mode. The Client tab includes controller detection and lets you select the active XInput controller before starting.
 
 ## Notes
 
 - This MVP uses XInput for Xbox-style controllers.
+- DualShock/DualSense controllers require an XInput wrapper such as DS4Windows to be detected by the client.
 - Gyro and other advanced controller data are not included in this initial release.
 
 ## Disclaimer

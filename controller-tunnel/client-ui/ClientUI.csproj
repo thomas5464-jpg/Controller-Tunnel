@@ -7,6 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Nefarius.ViGEm.Client" Version="1.17.175" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\client\Client.csproj" />
   </ItemGroup>
 </Project>

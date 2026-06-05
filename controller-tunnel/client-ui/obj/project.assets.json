@@ -2,6 +2,15 @@
   "version": 4,
   "targets": {
     "net10.0-windows": {
+      "Nefarius.ViGEm.Client/1.17.175": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp2.2/Nefarius.ViGEm.Client.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp2.2/Nefarius.ViGEm.Client.dll": {}
+        }
+      },
       "Client/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v10.0",
@@ -15,6 +24,20 @@
     }
   },
   "libraries": {
+    "Nefarius.ViGEm.Client/1.17.175": {
+      "sha512": "IOEK/kTus3JGmKindbTJuhmQ25TFyXbgwazEWlTDTrZ75ZKrcqhk2R7bykXxk6kfqHnaqsTNLEBv8wqLO+0AfQ==",
+      "type": "package",
+      "path": "nefarius.vigem.client/1.17.175",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "ViGEm_Icon.png",
+        "lib/net452/Nefarius.ViGEm.Client.dll",
+        "lib/netcoreapp2.2/Nefarius.ViGEm.Client.dll",
+        "nefarius.vigem.client.1.17.175.nupkg.sha512",
+        "nefarius.vigem.client.nuspec"
+      ]
+    },
     "Client/1.0.0": {
       "type": "project",
       "path": "../client/Client.csproj",
@@ -23,7 +46,8 @@
   },
   "projectFileDependencyGroups": {
     "net10.0-windows": [
-      "Client >= 1.0.0"
+      "Client >= 1.0.0",
+      "Nefarius.ViGEm.Client >= 1.17.175"
     ]
   },
   "packageFolders": {
@@ -74,6 +98,12 @@
       "net10.0-windows": {
         "framework": "net10.0-windows7.0",
         "targetAlias": "net10.0-windows",
+        "dependencies": {
+          "Nefarius.ViGEm.Client": {
+            "target": "Package",
+            "version": "[1.17.175, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

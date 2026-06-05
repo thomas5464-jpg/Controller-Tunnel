@@ -20,3 +20,4 @@ E:\New folder (3)\controller-tunnel\client-ui\obj\Debug\net10.0-windows\refint\C
 E:\New folder (3)\controller-tunnel\client-ui\obj\Debug\net10.0-windows\ClientUI.pdb
 E:\New folder (3)\controller-tunnel\client-ui\obj\Debug\net10.0-windows\ClientUI.genruntimeconfig.cache
 E:\New folder (3)\controller-tunnel\client-ui\obj\Debug\net10.0-windows\ref\ClientUI.dll
+E:\New folder (3)\controller-tunnel\client-ui\bin\Debug\net10.0-windows\Nefarius.ViGEm.Client.dll

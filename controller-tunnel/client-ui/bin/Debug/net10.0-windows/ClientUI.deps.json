@@ -8,10 +8,19 @@
     ".NETCoreApp,Version=v10.0": {
       "ClientUI/1.0.0": {
         "dependencies": {
-          "Client": "1.0.0"
+          "Client": "1.0.0",
+          "Nefarius.ViGEm.Client": "1.17.175"
         },
         "runtime": {
           "ClientUI.dll": {}
+        }
+      },
+      "Nefarius.ViGEm.Client/1.17.175": {
+        "runtime": {
+          "lib/netcoreapp2.2/Nefarius.ViGEm.Client.dll": {
+            "assemblyVersion": "1.17.175.0",
+            "fileVersion": "1.17.175.0"
+          }
         }
       },
       "Client/1.0.0": {
@@ -29,6 +38,13 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "Nefarius.ViGEm.Client/1.17.175": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-IOEK/kTus3JGmKindbTJuhmQ25TFyXbgwazEWlTDTrZ75ZKrcqhk2R7bykXxk6kfqHnaqsTNLEBv8wqLO+0AfQ==",
+      "path": "nefarius.vigem.client/1.17.175",
+      "hashPath": "nefarius.vigem.client.1.17.175.nupkg.sha512"
     },
     "Client/1.0.0": {
       "type": "project",
