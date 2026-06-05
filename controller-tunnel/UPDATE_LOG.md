@@ -31,3 +31,4 @@
 - Added slower, averaged gyro UI updates so values are readable while testing.
 - Added startup gyro calibration that asks the user to keep the controller still, subtracts stationary bias, converts raw counts to degrees/sec, and applies a small deadzone.
 - Updated the console client to reset gyro calibration on startup.
+- Restored the server listen IP field, bound the server to the selected IP/port, and added a separate server gyro status readout.

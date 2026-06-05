@@ -28,12 +28,14 @@ namespace ClientUI
         Label lblControllerStatus;
         List<int> availableControllers = new List<int>();
 
+        TextBox txtListenIp;
         TextBox txtListenPort;
         TextBox txtServerPsk;
         Button btnServerStart;
         Button btnServerStop;
         Label lblServerStatus;
         Label lblServerRemote;
+        Label lblServerGyroStatus;
 
         CancellationTokenSource? ctsClient;
         CancellationTokenSource? ctsServer;
@@ -141,8 +143,11 @@ namespace ClientUI
 
             clientTab.Controls.AddRange(new Control[] { lblController, cmbControllerIndex, lblControllerStatus, lbl1, txtServer, lbl2, txtPort, lbl3, txtPsk, btnClientStart, btnClientStop, lblClientStatus, lblGyroStatus });
 
-            var lblSrv1 = new Label() { Left = 10, Top = 10, Text = "Listen Port:" };
-            txtListenPort = new TextBox() { Left = 110, Top = 8, Width = 100, Text = "5555" };
+            var lblSrvIp = new Label() { Left = 10, Top = 10, Text = "Listen IP:" };
+            txtListenIp = new TextBox() { Left = 110, Top = 8, Width = 180, Text = "0.0.0.0" };
+
+            var lblSrv1 = new Label() { Left = 320, Top = 10, Text = "Port:" };
+            txtListenPort = new TextBox() { Left = 370, Top = 8, Width = 100, Text = "5555" };
 
             var lblSrv2 = new Label() { Left = 10, Top = 40, Text = "PSK (optional):" };
             txtServerPsk = new TextBox() { Left = 110, Top = 38, Width = 620 };
@@ -151,11 +156,12 @@ namespace ClientUI
             btnServerStop = new Button() { Left = 200, Top = 75, Text = "Stop", Width = 80, Enabled = false };
             lblServerStatus = new Label() { Left = 10, Top = 120, Width = 760, Text = "Idle" };
             lblServerRemote = new Label() { Left = 10, Top = 150, Width = 760, Text = "Remote: none" };
+            lblServerGyroStatus = new Label() { Left = 10, Top = 180, Width = 760, Height = 70, Text = "Gyro: none", AutoSize = false };
 
             btnServerStart.Click += BtnServerStart_Click;
             btnServerStop.Click += BtnServerStop_Click;
 
-            serverTab.Controls.AddRange(new Control[] { lblSrv1, txtListenPort, lblSrv2, txtServerPsk, btnServerStart, btnServerStop, lblServerStatus, lblServerRemote });
+            serverTab.Controls.AddRange(new Control[] { lblSrvIp, txtListenIp, lblSrv1, txtListenPort, lblSrv2, txtServerPsk, btnServerStart, btnServerStop, lblServerStatus, lblServerRemote, lblServerGyroStatus });
 
             controllerTimer = new System.Windows.Forms.Timer() { Interval = 1000 };
             controllerTimer.Tick += ControllerTimer_Tick;
@@ -264,6 +270,12 @@ namespace ClientUI
         private void BtnServerStart_Click(object? sender, EventArgs e)
         {
             if (ctsServer != null) return;
+            if (!IPAddress.TryParse(txtListenIp.Text, out IPAddress? listenIp))
+            {
+                MessageBox.Show("Invalid listen IP");
+                return;
+            }
+
             if (!int.TryParse(txtListenPort.Text, out int port))
             {
                 MessageBox.Show("Invalid listen port");
@@ -281,7 +293,7 @@ namespace ClientUI
             {
                 try
                 {
-                    RunServerLoop(port, psk, ctsServer.Token);
+                    RunServerLoop(listenIp, port, psk, ctsServer.Token);
                     BeginInvoke(new Action(() => lblServerStatus.Text = "Stopped"));
                 }
                 catch (OperationCanceledException)
@@ -438,7 +450,7 @@ namespace ClientUI
             token.ThrowIfCancellationRequested();
         }
 
-        private void RunServerLoop(int port, string? psk, CancellationToken token)
+        private void RunServerLoop(IPAddress listenIp, int port, string? psk, CancellationToken token)
         {
             byte[]? key = null;
             if (!string.IsNullOrEmpty(psk))
@@ -447,13 +459,14 @@ namespace ClientUI
                 key = sha.ComputeHash(System.Text.Encoding.UTF8.GetBytes(psk));
             }
 
-            using var udp = new UdpClient(port);
+            var listenEndpoint = new IPEndPoint(listenIp, port);
+            using var udp = new UdpClient(listenEndpoint);
             udp.Client.ReceiveTimeout = 1000;
 
             using var client = new ViGEmClient();
             var controller = client.CreateXbox360Controller();
             controller.Connect();
-            BeginInvoke(new Action(() => lblServerStatus.Text = "Server running, virtual controller connected."));
+            BeginInvoke(new Action(() => lblServerStatus.Text = $"Server listening on {listenEndpoint}, virtual controller connected."));
 
             int packetCount = 0;
             DateTime nextServerStatusUpdate = DateTime.UtcNow;
@@ -582,8 +595,9 @@ namespace ClientUI
 
                         BeginInvoke(new Action(() =>
                         {
-                            lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}. Gyro deg/sec avg: {avgX:F2}, {avgY:F2}, {avgZ:F2}";
+                            lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}.";
                             lblServerRemote.Text = $"Remote: {remoteEndPoint.Address}:{remoteEndPoint.Port}";
+                            lblServerGyroStatus.Text = $"Gyro deg/sec avg: {avgX:F2}, {avgY:F2}, {avgZ:F2}";
                         }));
 
                         serverGyroDisplayX = 0f;
@@ -599,6 +613,7 @@ namespace ClientUI
                     {
                         lblServerStatus.Text = $"Received {packetCount} packets, seq {seq}.";
                         lblServerRemote.Text = $"Remote: {remoteEndPoint.Address}:{remoteEndPoint.Port}";
+                        lblServerGyroStatus.Text = "Gyro: no gyro data in last packet";
                     }));
                 }
             }
